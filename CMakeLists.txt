@@ -134,6 +134,7 @@ INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/thirdparty)
 
 ADD_SUBDIRECTORY(common)
 ADD_SUBDIRECTORY(msg_passing)
+ADD_SUBDIRECTORY(images)
 ADD_SUBDIRECTORY(thirdparty)
 
 ADD_LIBRARY(regioncurv
@@ -142,6 +143,7 @@ ADD_LIBRARY(regioncurv
 	conv_lp_solving.cc
 	conversion.cc
 	curvature.cc
+	curv_denoising.cc
 	draw_segmentation.cc
 	extended_lp_segmentation.cc
 	gpcpetter.cc
@@ -156,18 +158,24 @@ ADD_LIBRARY(regioncurv
 	svg.cc)
 
 ADD_EXECUTABLE(lpseg lpseg.cc)
+ADD_EXECUTABLE(interactiveseg interactive_seg.cc)
+ADD_EXECUTABLE(lpinpaint lpinpaint.cc)
+ADD_EXECUTABLE(curvdenoise curvdenoise.cc)
 
-TARGET_LINK_LIBRARIES(lpseg gpc regioncurv regioncurv_common msg_passing)
-TARGET_LINK_LIBRARIES(lpseg ${CBC_LIB} ${CBCSOLVER_LIB} ${CGL_LIB} ${CLP_LIB} ${COINUTILS_LIB} ${OSI_LIB} ${OSI_CLP_LIB})
+SET(LIBRARY_DEPENDENCIES)
+LIST(APPEND LIBRARY_DEPENDENCIES gpc regioncurv regioncurv_common msg_passing)
+LIST(APPEND LIBRARY_DEPENDENCIES ${CBC_LIB} ${CBCSOLVER_LIB} ${CGL_LIB} ${CLP_LIB} ${COINUTILS_LIB} ${OSI_LIB} ${OSI_CLP_LIB})
 if (${USE_MOSEK})
-	TARGET_LINK_LIBRARIES(regioncurv ${MOSEK_LIB} ${OSI_MSK_LIB})
+	LIST(APPEND LIBRARY_DEPENDENCIES ${MOSEK_LIB} ${OSI_MSK_LIB})
 endif (${USE_MOSEK})
 if (${USE_CPLEX})
-	TARGET_LINK_LIBRARIES(regioncurv ${CPLEX_LIB} ${OSI_CPX_LIB})
+	LIST(APPEND LIBRARY_DEPENDENCIES ${CPLEX_LIB} ${OSI_CPX_LIB})
 endif (${USE_CPLEX})
 
-
-
+TARGET_LINK_LIBRARIES(lpseg ${LIBRARY_DEPENDENCIES})
+TARGET_LINK_LIBRARIES(interactiveseg ${LIBRARY_DEPENDENCIES})
+TARGET_LINK_LIBRARIES(lpinpaint ${LIBRARY_DEPENDENCIES})
+TARGET_LINK_LIBRARIES(curvdenoise ${LIBRARY_DEPENDENCIES})
 
 #
 # Packaging
