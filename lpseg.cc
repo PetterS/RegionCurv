@@ -409,7 +409,11 @@ int main(int argc, char** argv) {
 						  quiet_mp, 0 , app.is_set("-rescale"));
       }
       else if (mode_string == "qpbo") {
-	qpbo_segment_curvreg(data_term, seg_opts, energy_offset, segmentation);
+      #ifdef HAS_QPBO
+        qpbo_segment_curvreg(data_term, seg_opts, energy_offset, segmentation);
+      #else
+        USER_ERROR << "No QPBO available!" << std::endl;
+      #endif
       } 
       else if (mode_string == "icm") {
 	if (nRegions == 2)

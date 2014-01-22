@@ -2,6 +2,7 @@
 
 #include "curvature.hh"
 
+#include <algorithm>
 #include <cmath>
 
 #ifndef M_PI

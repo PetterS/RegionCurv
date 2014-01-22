@@ -3,7 +3,10 @@
 #include "gpcpetter.hh"
 #include "mesh2D.hh"
 
+extern "C" 
+{
 #include "gpc.h"
+}
 
 //
 // Computes the intersection of two polygons. 
